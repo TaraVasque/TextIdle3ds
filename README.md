@@ -59,7 +59,7 @@ The top screen shows the progress of the save-code entry so it is readable and e
 
 Invalid values are rejected before the game accepts the save.
 
-
+please exuse the crude format and way ive made the game images i couldnt figure out how to get a screen shot of the game, using auroras l1+r1 ss combo didnt work in my game so i resorted to taking physical pictures and putting them in the gameimages folder
 
 
 
