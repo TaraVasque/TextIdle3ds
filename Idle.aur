@@ -10,6 +10,7 @@
 //DISCORD
 //"taravask."
 
+// to anyone who looks in here im so sorry you have to see all those if statements </3
 
 // -----------------------------------------------------------------------------
 // numbers we politely ask the universe to respect
@@ -27,6 +28,7 @@ let MODE_SAVE = 4;
 let MODE_LOAD = 5;
 let MODE_RESET = 6;
 let MODE_MENU = 7;
+let MODE_INFO = 8;
 
 // -----------------------------------------------------------------------------
 // the important little pile of numbers
@@ -2643,6 +2645,80 @@ fn draw_text_id(id: int, x: int, y: int, color: int) {
         draw_char_code(69, x + 72, y, color);
         return;
     }
+    if id == 186 {
+        draw_char_code(71, x + 0, y, color);
+        draw_char_code(73, x + 6, y, color);
+        draw_char_code(84, x + 12, y, color);
+        draw_char_code(72, x + 18, y, color);
+        draw_char_code(85, x + 24, y, color);
+        draw_char_code(66, x + 30, y, color);
+        return;
+    }
+    if id == 182 {
+        draw_char_code(73, x + 0, y, color);
+        draw_char_code(78, x + 6, y, color);
+        draw_char_code(70, x + 12, y, color);
+        draw_char_code(79, x + 18, y, color);
+        return;
+    }
+    if id == 183 {
+        draw_char_code(71, x + 0, y, color);
+        draw_char_code(73, x + 6, y, color);
+        draw_char_code(84, x + 12, y, color);
+        draw_char_code(72, x + 18, y, color);
+        draw_char_code(85, x + 24, y, color);
+        draw_char_code(66, x + 30, y, color);
+        draw_char_code(46, x + 36, y, color);
+        draw_char_code(67, x + 42, y, color);
+        draw_char_code(79, x + 48, y, color);
+        draw_char_code(77, x + 54, y, color);
+        draw_char_code(47, x + 60, y, color);
+        draw_char_code(84, x + 66, y, color);
+        draw_char_code(65, x + 72, y, color);
+        draw_char_code(82, x + 78, y, color);
+        draw_char_code(65, x + 84, y, color);
+        draw_char_code(86, x + 90, y, color);
+        draw_char_code(65, x + 96, y, color);
+        draw_char_code(83, x + 102, y, color);
+        draw_char_code(81, x + 108, y, color);
+        draw_char_code(85, x + 114, y, color);
+        draw_char_code(69, x + 120, y, color);
+        draw_char_code(47, x + 126, y, color);
+        draw_char_code(84, x + 132, y, color);
+        draw_char_code(101, x + 138, y, color);
+        draw_char_code(120, x + 144, y, color);
+        draw_char_code(116, x + 150, y, color);
+        draw_char_code(73, x + 156, y, color);
+        draw_char_code(100, x + 162, y, color);
+        draw_char_code(108, x + 168, y, color);
+        draw_char_code(101, x + 174, y, color);
+        draw_char_code(51, x + 180, y, color);
+        draw_char_code(100, x + 186, y, color);
+        draw_char_code(115, x + 192, y, color);
+        return;
+    }
+    if id == 184 {
+        draw_char_code(68, x + 0, y, color);
+        draw_char_code(73, x + 6, y, color);
+        draw_char_code(83, x + 12, y, color);
+        draw_char_code(67, x + 18, y, color);
+        draw_char_code(79, x + 24, y, color);
+        draw_char_code(82, x + 30, y, color);
+        draw_char_code(68, x + 36, y, color);
+        return;
+    }
+    if id == 185 {
+        draw_char_code(116, x + 0, y, color);
+        draw_char_code(97, x + 6, y, color);
+        draw_char_code(114, x + 12, y, color);
+        draw_char_code(97, x + 18, y, color);
+        draw_char_code(118, x + 24, y, color);
+        draw_char_code(97, x + 30, y, color);
+        draw_char_code(115, x + 36, y, color);
+        draw_char_code(107, x + 42, y, color);
+        draw_char_code(46, x + 48, y, color);
+        return;
+    }
 }
 
 fn clamp_seed_group(value: int) -> int {
@@ -3839,6 +3915,33 @@ fn draw_load() {
     }
 }
 
+fn draw_info() {
+    screen(0);
+    clear(BLACK);
+    draw_header(182);
+
+    draw_card(12, 40, 376, 70);
+    draw_text_id(186, 22, 50, AURORA);
+    draw_text_id(183, 22, 70, WHITE);
+
+    draw_card(12, 122, 376, 58);
+    draw_text_id(184, 22, 132, AURORA);
+    draw_text_id(185, 22, 152, WHITE);
+
+    draw_button(120, 194, 160, 30, 160);
+
+    screen(1);
+    clear(BLACK);
+    draw_header_small(182);
+    draw_text_id(100, 16, 46, WHITE);
+    draw_text_id(101, 150, 46, GRAY);
+    draw_text_id(106, 16, 82, GRAY);
+    draw_text_id(184, 16, 116, AURORA);
+    draw_text_id(185, 16, 136, WHITE);
+    draw_text_id(183, 16, 172, GRAY);
+    draw_text_id(180, 136, 202, WHITE);
+}
+
 fn draw_reset() {
     screen(0);
     clear(BLACK);
@@ -3855,18 +3958,20 @@ fn draw_menu() {
     clear(BLACK);
     draw_header(152);
 
-    if menu_cursor == 0 { draw_selected_button(32, 42, 336, 28, 153); }
-    else { draw_button(32, 42, 336, 28, 153); }
-    if menu_cursor == 1 { draw_selected_button(32, 74, 336, 28, 129); }
-    else { draw_button(32, 74, 336, 28, 129); }
-    if menu_cursor == 2 { draw_selected_button(32, 106, 336, 28, 154); }
-    else { draw_button(32, 106, 336, 28, 154); }
-    if menu_cursor == 3 { draw_selected_button(32, 138, 336, 28, 155); }
-    else { draw_button(32, 138, 336, 28, 155); }
-    if menu_cursor == 4 { draw_selected_button(32, 170, 336, 28, 156); }
-    else { draw_button(32, 170, 336, 28, 156); }
-    if menu_cursor == 5 { draw_selected_button(32, 202, 336, 28, 157); }
-    else { draw_button(32, 202, 336, 28, 157); }
+    if menu_cursor == 0 { draw_selected_button(32, 42, 336, 26, 153); }
+    else { draw_button(32, 42, 336, 26, 153); }
+    if menu_cursor == 1 { draw_selected_button(32, 70, 336, 26, 129); }
+    else { draw_button(32, 70, 336, 26, 129); }
+    if menu_cursor == 2 { draw_selected_button(32, 98, 336, 26, 154); }
+    else { draw_button(32, 98, 336, 26, 154); }
+    if menu_cursor == 3 { draw_selected_button(32, 126, 336, 26, 155); }
+    else { draw_button(32, 126, 336, 26, 155); }
+    if menu_cursor == 4 { draw_selected_button(32, 154, 336, 26, 156); }
+    else { draw_button(32, 154, 336, 26, 156); }
+    if menu_cursor == 5 { draw_selected_button(32, 182, 336, 26, 182); }
+    else { draw_button(32, 182, 336, 26, 182); }
+    if menu_cursor == 6 { draw_selected_button(32, 210, 336, 26, 157); }
+    else { draw_button(32, 210, 336, 26, 157); }
 
     screen(1);
     clear(BLACK);
@@ -3881,6 +3986,7 @@ fn draw_menu() {
     draw_text_id(105, 150, 116, GRAY);
     draw_text_id(106, 16, 168, GRAY);
 }
+
 
 // -----------------------------------------------------------------------------
 // button stuff. fingers go brrrr.
@@ -3978,7 +4084,7 @@ fn handle_menu_keys(keys: int) {
     }
 
     if (keys & KEY_DOWN) != 0 {
-        if menu_cursor < 5 {
+        if menu_cursor < 6 {
             menu_cursor = menu_cursor + 1;
         }
     }
@@ -4000,10 +4106,13 @@ fn handle_menu_keys(keys: int) {
             load_wizard_reset();
             screen_mode = MODE_LOAD;
         } else if menu_cursor == 5 {
+            screen_mode = MODE_INFO;
+        } else if menu_cursor == 6 {
             screen_mode = MODE_RESET;
         }
     }
 }
+
 
 fn handle_reset_keys(keys: int) {
     if (keys & KEY_B) != 0 {
@@ -4304,6 +4413,14 @@ fn main() {
         } else if screen_mode == MODE_MENU {
             handle_menu_keys(keys);
             draw_menu();
+        } else if screen_mode == MODE_INFO {
+            if (keys & KEY_B) != 0 {
+                screen_mode = MODE_MENU;
+            }
+            if (keys & KEY_A) != 0 {
+                screen_mode = MODE_MENU;
+            }
+            draw_info();
         }
 
         present();
