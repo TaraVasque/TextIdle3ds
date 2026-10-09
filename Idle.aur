@@ -4221,8 +4221,6 @@ fn draw_load() {
     draw_button(112, 142, 96, 26, 10);
     draw_button(216, 142, 96, 26, 11);
     draw_button(8,   172, 96, 26, 2);
-    draw_button(112, 172, 96, 26, 148);
-    draw_button(216, 172, 96, 26, 149);
 
     draw_button(8, 202, 96, 26, 148);
     draw_button(112, 202, 96, 26, 149);
@@ -4259,7 +4257,7 @@ fn draw_version(x: int, y: int, color: int) {
 
 fn draw_info() {
     // INFO PAGE - plain built-in text on a black background.
-    // Edit the strings below directly to change the information shown.
+
     screen(0);
     clear(BLACK);
 
@@ -4533,10 +4531,8 @@ fn handle_load_touch() {
     else if touch_in(8, 142, 96, 26) { save_code_char(55); }
     else if touch_in(112, 142, 96, 26) { save_code_char(56); }
     else if touch_in(216, 142, 96, 26) { save_code_char(57); }
-    // 0 / extra zero buttons
+    // 0
     else if touch_in(8, 172, 96, 26) { save_code_char(48); }
-    else if touch_in(112, 172, 96, 26) { save_code_char(48); }
-    else if touch_in(216, 172, 96, 26) { save_code_char(48); }
     // Backspace / clear / next
     else if touch_in(8, 202, 96, 26) { save_code_backspace(); }
     else if touch_in(112, 202, 96, 26) { save_code_clear(); }
