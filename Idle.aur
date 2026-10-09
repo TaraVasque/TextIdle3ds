@@ -19,6 +19,11 @@ let MAX_GENERATORS = 99999;
 let MAX_SEED_GROUP = 99999;
 let MAX_INT = 2147483647;
 
+// Change these numbers to update the version shown on the INFO page.
+let VERSION_MAJOR = 1;
+let VERSION_MINOR = 0;
+let VERSION_PATCH = 0;
+
 // screens. so many screens. why are there so many screens.
 let MODE_TITLE = 0;
 let MODE_GAME = 1;
@@ -65,6 +70,8 @@ let upgrade_critical = false;
 
 let screen_mode = 0;
 let running = true;
+let konami_index = 0;
+let konami_cheater = false;
 let last_second = 0;
 let combo_timer = 0;
 let message_timer = 0;
@@ -2719,6 +2726,225 @@ fn draw_text_id(id: int, x: int, y: int, color: int) {
         draw_char_code(46, x + 48, y, color);
         return;
     }
+    if id == 187 {
+        draw_char_code(84, x + 0, y, color);
+        draw_char_code(69, x + 6, y, color);
+        draw_char_code(88, x + 12, y, color);
+        draw_char_code(84, x + 18, y, color);
+        draw_char_code(32, x + 24, y, color);
+        draw_char_code(66, x + 30, y, color);
+        draw_char_code(65, x + 36, y, color);
+        draw_char_code(83, x + 42, y, color);
+        draw_char_code(69, x + 48, y, color);
+        draw_char_code(68, x + 54, y, color);
+        draw_char_code(32, x + 60, y, color);
+        draw_char_code(73, x + 66, y, color);
+        draw_char_code(68, x + 72, y, color);
+        draw_char_code(76, x + 78, y, color);
+        draw_char_code(69, x + 84, y, color);
+        draw_char_code(32, x + 90, y, color);
+        draw_char_code(71, x + 96, y, color);
+        draw_char_code(65, x + 102, y, color);
+        draw_char_code(77, x + 108, y, color);
+        draw_char_code(69, x + 114, y, color);
+        return;
+    }
+    if id == 188 {
+        draw_char_code(66, x + 0, y, color);
+        draw_char_code(85, x + 6, y, color);
+        draw_char_code(73, x + 12, y, color);
+        draw_char_code(76, x + 18, y, color);
+        draw_char_code(68, x + 24, y, color);
+        draw_char_code(32, x + 30, y, color);
+        draw_char_code(89, x + 36, y, color);
+        draw_char_code(79, x + 42, y, color);
+        draw_char_code(85, x + 48, y, color);
+        draw_char_code(82, x + 54, y, color);
+        draw_char_code(32, x + 60, y, color);
+        draw_char_code(68, x + 66, y, color);
+        draw_char_code(73, x + 72, y, color);
+        draw_char_code(71, x + 78, y, color);
+        draw_char_code(73, x + 84, y, color);
+        draw_char_code(84, x + 90, y, color);
+        draw_char_code(65, x + 96, y, color);
+        draw_char_code(76, x + 102, y, color);
+        draw_char_code(32, x + 108, y, color);
+        draw_char_code(69, x + 114, y, color);
+        draw_char_code(77, x + 120, y, color);
+        draw_char_code(80, x + 126, y, color);
+        draw_char_code(73, x + 132, y, color);
+        draw_char_code(82, x + 138, y, color);
+        draw_char_code(69, x + 144, y, color);
+        return;
+    }
+    if id == 189 {
+        draw_char_code(72, x + 0, y, color);
+        draw_char_code(79, x + 6, y, color);
+        draw_char_code(87, x + 12, y, color);
+        draw_char_code(32, x + 18, y, color);
+        draw_char_code(84, x + 24, y, color);
+        draw_char_code(79, x + 30, y, color);
+        draw_char_code(32, x + 36, y, color);
+        draw_char_code(80, x + 42, y, color);
+        draw_char_code(76, x + 48, y, color);
+        draw_char_code(65, x + 54, y, color);
+        draw_char_code(89, x + 60, y, color);
+        return;
+    }
+    if id == 190 {
+        draw_char_code(65, x + 0, y, color);
+        draw_char_code(32, x + 6, y, color);
+        draw_char_code(79, x + 12, y, color);
+        draw_char_code(82, x + 18, y, color);
+        draw_char_code(32, x + 24, y, color);
+        draw_char_code(84, x + 30, y, color);
+        draw_char_code(79, x + 36, y, color);
+        draw_char_code(85, x + 42, y, color);
+        draw_char_code(67, x + 48, y, color);
+        draw_char_code(72, x + 54, y, color);
+        draw_char_code(32, x + 60, y, color);
+        draw_char_code(84, x + 66, y, color);
+        draw_char_code(79, x + 72, y, color);
+        draw_char_code(32, x + 78, y, color);
+        draw_char_code(69, x + 84, y, color);
+        draw_char_code(65, x + 90, y, color);
+        draw_char_code(82, x + 96, y, color);
+        draw_char_code(78, x + 102, y, color);
+        draw_char_code(32, x + 108, y, color);
+        draw_char_code(67, x + 114, y, color);
+        draw_char_code(79, x + 120, y, color);
+        draw_char_code(73, x + 126, y, color);
+        draw_char_code(78, x + 132, y, color);
+        draw_char_code(83, x + 138, y, color);
+        return;
+    }
+    if id == 191 {
+        draw_char_code(76, x + 0, y, color);
+        draw_char_code(69, x + 6, y, color);
+        draw_char_code(70, x + 12, y, color);
+        draw_char_code(84, x + 18, y, color);
+        draw_char_code(32, x + 24, y, color);
+        draw_char_code(83, x + 30, y, color);
+        draw_char_code(72, x + 36, y, color);
+        draw_char_code(79, x + 42, y, color);
+        draw_char_code(80, x + 48, y, color);
+        draw_char_code(32, x + 54, y, color);
+        draw_char_code(82, x + 60, y, color);
+        draw_char_code(73, x + 66, y, color);
+        draw_char_code(71, x + 72, y, color);
+        draw_char_code(72, x + 78, y, color);
+        draw_char_code(84, x + 84, y, color);
+        draw_char_code(32, x + 90, y, color);
+        draw_char_code(83, x + 96, y, color);
+        draw_char_code(84, x + 102, y, color);
+        draw_char_code(65, x + 108, y, color);
+        draw_char_code(84, x + 114, y, color);
+        draw_char_code(83, x + 120, y, color);
+        return;
+    }
+    if id == 192 {
+        draw_char_code(77, x + 0, y, color);
+        draw_char_code(73, x + 6, y, color);
+        draw_char_code(76, x + 12, y, color);
+        draw_char_code(69, x + 18, y, color);
+        draw_char_code(83, x + 24, y, color);
+        draw_char_code(84, x + 30, y, color);
+        draw_char_code(79, x + 36, y, color);
+        draw_char_code(78, x + 42, y, color);
+        draw_char_code(69, x + 48, y, color);
+        draw_char_code(32, x + 54, y, color);
+        draw_char_code(80, x + 60, y, color);
+        draw_char_code(79, x + 66, y, color);
+        draw_char_code(87, x + 72, y, color);
+        draw_char_code(69, x + 78, y, color);
+        draw_char_code(82, x + 84, y, color);
+        return;
+    }
+    if id == 193 {
+        draw_char_code(49, x + 0, y, color);
+        draw_char_code(75, x + 6, y, color);
+        draw_char_code(32, x + 12, y, color);
+        draw_char_code(43, x + 18, y, color);
+        draw_char_code(49, x + 24, y, color);
+        draw_char_code(32, x + 30, y, color);
+        draw_char_code(32, x + 36, y, color);
+        draw_char_code(49, x + 42, y, color);
+        draw_char_code(48, x + 48, y, color);
+        draw_char_code(75, x + 54, y, color);
+        draw_char_code(32, x + 60, y, color);
+        draw_char_code(43, x + 66, y, color);
+        draw_char_code(50, x + 72, y, color);
+        draw_char_code(32, x + 78, y, color);
+        draw_char_code(67, x + 84, y, color);
+        draw_char_code(76, x + 90, y, color);
+        draw_char_code(73, x + 96, y, color);
+        draw_char_code(67, x + 102, y, color);
+        draw_char_code(75, x + 108, y, color);
+        return;
+    }
+    if id == 194 {
+        draw_char_code(49, x + 0, y, color);
+        draw_char_code(48, x + 6, y, color);
+        draw_char_code(48, x + 12, y, color);
+        draw_char_code(75, x + 18, y, color);
+        draw_char_code(32, x + 24, y, color);
+        draw_char_code(43, x + 30, y, color);
+        draw_char_code(53, x + 36, y, color);
+        draw_char_code(32, x + 42, y, color);
+        draw_char_code(32, x + 48, y, color);
+        draw_char_code(49, x + 54, y, color);
+        draw_char_code(77, x + 60, y, color);
+        draw_char_code(32, x + 66, y, color);
+        draw_char_code(43, x + 72, y, color);
+        draw_char_code(49, x + 78, y, color);
+        draw_char_code(48, x + 84, y, color);
+        draw_char_code(32, x + 90, y, color);
+        draw_char_code(67, x + 96, y, color);
+        draw_char_code(76, x + 102, y, color);
+        draw_char_code(73, x + 108, y, color);
+        draw_char_code(67, x + 114, y, color);
+        draw_char_code(75, x + 120, y, color);
+        return;
+    }
+    if id == 195 {
+        draw_char_code(66, x + 0, y, color);
+        draw_char_code(79, x + 6, y, color);
+        draw_char_code(78, x + 12, y, color);
+        draw_char_code(85, x + 18, y, color);
+        draw_char_code(83, x + 24, y, color);
+        draw_char_code(69, x + 30, y, color);
+        draw_char_code(83, x + 36, y, color);
+        draw_char_code(32, x + 42, y, color);
+        draw_char_code(83, x + 48, y, color);
+        draw_char_code(84, x + 54, y, color);
+        draw_char_code(65, x + 60, y, color);
+        draw_char_code(67, x + 66, y, color);
+        draw_char_code(75, x + 72, y, color);
+        draw_char_code(32, x + 78, y, color);
+        draw_char_code(80, x + 84, y, color);
+        draw_char_code(69, x + 90, y, color);
+        draw_char_code(82, x + 96, y, color);
+        draw_char_code(77, x + 102, y, color);
+        draw_char_code(65, x + 108, y, color);
+        draw_char_code(78, x + 114, y, color);
+        draw_char_code(69, x + 120, y, color);
+        draw_char_code(78, x + 126, y, color);
+        draw_char_code(84, x + 132, y, color);
+        draw_char_code(76, x + 138, y, color);
+        draw_char_code(89, x + 144, y, color);
+        return;
+    }
+    if id == 196 {
+        draw_char_code(86, x + 0, y, color);
+        draw_char_code(69, x + 6, y, color);
+        draw_char_code(82, x + 12, y, color);
+        draw_char_code(83, x + 18, y, color);
+        draw_char_code(73, x + 24, y, color);
+        draw_char_code(79, x + 30, y, color);
+        draw_char_code(78, x + 36, y, color);
+        return;
+    }
+
 }
 
 fn clamp_seed_group(value: int) -> int {
@@ -2788,6 +3014,91 @@ fn get_production() -> int {
     return production;
 }
 
+// Konami code: UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT B A.
+fn activate_konami_cheat() {
+    konami_cheater = true;
+
+    coins = MAX_INT;
+    lifetime_coins = MAX_INT;
+    highest_coins = MAX_INT;
+
+    cursors = MAX_GENERATORS;
+    workers = MAX_GENERATORS;
+    factories = MAX_GENERATORS;
+    cores = MAX_GENERATORS;
+
+    cursor_click_upgrades = MAX_GENERATORS;
+    worker_click_upgrades = MAX_GENERATORS;
+    factory_click_upgrades = MAX_GENERATORS;
+    core_click_upgrades = MAX_GENERATORS;
+
+    click_power = 1000000;
+    click_multiplier = 2;
+    upgrade_click = true;
+    upgrade_production = true;
+    upgrade_critical = true;
+
+    best_combo = MAX_GENERATORS;
+    update_generator_costs();
+    show_message(1);
+}
+
+fn check_konami_code(keys: int) {
+    if keys == 0 {
+        return;
+    }
+
+    if konami_index == 0 {
+        if (keys & KEY_UP) != 0 { konami_index = 1; }
+    } else if konami_index == 1 {
+        if (keys & KEY_UP) != 0 { konami_index = 2; }
+        else { konami_index = 0; }
+    } else if konami_index == 2 {
+        if (keys & KEY_DOWN) != 0 { konami_index = 3; }
+        else { konami_index = 0; }
+    } else if konami_index == 3 {
+        if (keys & KEY_DOWN) != 0 { konami_index = 4; }
+        else { konami_index = 0; }
+    } else if konami_index == 4 {
+        if (keys & KEY_LEFT) != 0 { konami_index = 5; }
+        else { konami_index = 0; }
+    } else if konami_index == 5 {
+        if (keys & KEY_RIGHT) != 0 { konami_index = 6; }
+        else { konami_index = 0; }
+    } else if konami_index == 6 {
+        if (keys & KEY_LEFT) != 0 { konami_index = 7; }
+        else { konami_index = 0; }
+    } else if konami_index == 7 {
+        if (keys & KEY_RIGHT) != 0 { konami_index = 8; }
+        else { konami_index = 0; }
+    } else if konami_index == 8 {
+        if (keys & KEY_B) != 0 { konami_index = 9; }
+        else { konami_index = 0; }
+    } else if konami_index == 9 {
+        if (keys & KEY_A) != 0 {
+            konami_index = 0;
+            activate_konami_cheat();
+        } else {
+            konami_index = 0;
+        }
+    }
+}
+
+// Milestones are permanent because they are based on lifetime coins.
+// Rewards stack: 1K = +1, 10K = +2, 100K = +5, 1M = +10 click power.
+fn get_milestone_bonus() -> int {
+    let bonus = 0;
+    if lifetime_coins >= 1000 { bonus = bonus + 1; }
+    if lifetime_coins >= 10000 { bonus = bonus + 2; }
+    if lifetime_coins >= 100000 { bonus = bonus + 5; }
+    if lifetime_coins >= 1000000 { bonus = bonus + 10; }
+    return bonus;
+}
+
+fn get_effective_click_power() -> int {
+    return click_power + get_milestone_bonus();
+}
+
 fn cursor_upgrade_cost() -> int {
     return 1000 + (cursor_click_upgrades * 1000);
 }
@@ -2813,6 +3124,8 @@ fn show_message(code: int) {
 // reset button. big red cosmic oopsie button.
 // -----------------------------------------------------------------------------
 fn reset_game() {
+    konami_index = 0;
+    konami_cheater = false;
     coins = 0;
     lifetime_coins = 0;
     clicks = 0;
@@ -2847,7 +3160,7 @@ fn reset_game() {
 // click click click. behold, the economy.
 // -----------------------------------------------------------------------------
 fn do_click() {
-    let reward = click_power * click_multiplier;
+    let reward = get_effective_click_power() * click_multiplier;
 
     clicks = clicks + 1;
     combo = combo + 1;
@@ -2869,7 +3182,7 @@ fn do_click() {
 
     // combo gets spicy after ten. apparently clicking repeatedly has consequences.
     if combo >= 10 {
-        reward = reward + ((combo / 10) * click_power);
+        reward = reward + ((combo / 10) * get_effective_click_power());
     }
 
     add_coins(reward);
@@ -3598,10 +3911,21 @@ fn draw_game() {
     screen(0);
     clear(BLACK);
     draw_header(107);
+    if konami_cheater {
+        let cheat_color = RED;
+        let color_step = (millis() / 180) % 6;
+        if color_step == 0 { cheat_color = RED; }
+        else if color_step == 1 { cheat_color = ORANGE; }
+        else if color_step == 2 { cheat_color = YELLOW; }
+        else if color_step == 3 { cheat_color = GREEN; }
+        else if color_step == 4 { cheat_color = CYAN; }
+        else { cheat_color = MAGENTA; }
+        print("KONAMI CHEATER", 62, 7, cheat_color);
+    }
     draw_coin_bar();
 
     draw_text_id(40, 16, 88, GRAY);
-    draw_int(click_power, 16, 104, WHITE);
+    draw_int(get_effective_click_power(), 16, 104, WHITE);
     draw_text_id(41, 310, 88, GRAY);
     draw_int(combo, 310, 104, AURORA);
 
@@ -3706,7 +4030,7 @@ fn draw_shop() {
 
     draw_card(8, 86, 384, 122);
     draw_text_id(62, 20, 96, GRAY);
-    draw_int(click_power, 20, 114, WHITE);
+    draw_int(get_effective_click_power(), 20, 114, WHITE);
     draw_text_id(63, 20, 136, GRAY);
     if upgrade_critical {
         draw_text_id(64, 20, 152, GREEN);
@@ -3751,7 +4075,7 @@ fn draw_stats() {
     draw_text_id(74, 212, 84, GRAY);
     draw_int(get_production(), 212, 102, GREEN);
     draw_text_id(40, 212, 124, GRAY);
-    draw_int(click_power, 212, 142, WHITE);
+    draw_int(get_effective_click_power(), 212, 142, WHITE);
     draw_text_id(75, 212, 164, GRAY);
     draw_int(combo, 212, 182, AURORA);
 
@@ -3782,6 +4106,8 @@ fn draw_stats() {
     draw_text_id(76, 260, 102, GRAY);
     draw_int(core_click_upgrades, 260, 120, AURORA);
 
+    draw_text_id(192, 16, 158, YELLOW);
+    draw_int(get_milestone_bonus(), 112, 158, GREEN);
     draw_text_id(77, 16, 178, WHITE);
     draw_text_id(78, 104, 178, GRAY);
 }
@@ -3915,31 +4241,53 @@ fn draw_load() {
     }
 }
 
+fn draw_version(x: int, y: int, color: int) {
+    draw_char_code(86, x + 0, y, color);
+    draw_char_code(69, x + 6, y, color);
+    draw_char_code(82, x + 12, y, color);
+    draw_char_code(83, x + 18, y, color);
+    draw_char_code(73, x + 24, y, color);
+    draw_char_code(79, x + 30, y, color);
+    draw_char_code(78, x + 36, y, color);
+    draw_char_code(32, x + 42, y, color);
+    draw_int(VERSION_MAJOR, x + 48, y, color);
+    draw_char_code(46, x + 54, y, color);
+    draw_int(VERSION_MINOR, x + 60, y, color);
+    draw_char_code(46, x + 66, y, color);
+    draw_int(VERSION_PATCH, x + 72, y, color);
+}
+
 fn draw_info() {
+    // INFO PAGE - plain built-in text on a black background.
+    // Edit the strings below directly to change the information shown.
     screen(0);
     clear(BLACK);
-    draw_header(182);
 
-    draw_card(12, 40, 376, 70);
-    draw_text_id(186, 22, 50, AURORA);
-    draw_text_id(183, 22, 70, WHITE);
+    print("INFO", 16, 12, WHITE);
+    print("idle", 16, 36, WHITE);
+    print("Version: 1.0.0", 16, 58, WHITE);
 
-    draw_card(12, 122, 376, 58);
-    draw_text_id(184, 22, 132, AURORA);
-    draw_text_id(185, 22, 152, WHITE);
+    print("GitHub:", 16, 88, WHITE);
+    print("github.com/TaraVasque/TextIdle3ds", 16, 104, WHITE);
 
-    draw_button(120, 194, 160, 30, 160);
+    print("Discord:", 16, 132, WHITE);
+    print("taravask.", 16, 148, WHITE);
+
+    print("Milestone bonus:", 16, 178, WHITE);
+    print_int(get_milestone_bonus(), 160, 178, WHITE);
+    print("Lorem ipsum dolor sit amet.", 16, 218, WHITE);
 
     screen(1);
     clear(BLACK);
-    draw_header_small(182);
-    draw_text_id(100, 16, 46, WHITE);
-    draw_text_id(101, 150, 46, GRAY);
-    draw_text_id(106, 16, 82, GRAY);
-    draw_text_id(184, 16, 116, AURORA);
-    draw_text_id(185, 16, 136, WHITE);
-    draw_text_id(183, 16, 172, GRAY);
-    draw_text_id(180, 136, 202, WHITE);
+    print("INFO", 12, 12, WHITE);
+    print("A small idle game for the 3DS.", 12, 40, WHITE);
+    print("Click to earn coins.", 12, 60, WHITE);
+    print("Buy generators to earn coins", 12, 80, WHITE);
+    print("automatically.", 12, 96, WHITE);
+    print("Reach milestones for bonuses.", 12, 124, WHITE);
+    print("Your progress can be saved with", 12, 152, WHITE);
+    print("a save code from the Save menu.", 12, 168, WHITE);
+    print("Press B to go back", 100, 216, WHITE);
 }
 
 fn draw_reset() {
@@ -4336,6 +4684,8 @@ fn main() {
     while running {
         let keys = keys_down();
         let now = millis();
+
+        check_konami_code(keys);
 
         // every second the machines cough up some coins.
         if now >= last_second + 1000 {
