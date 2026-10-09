@@ -4265,7 +4265,7 @@ fn draw_info() {
 
     print("INFO", 16, 12, WHITE);
     print("idle", 16, 36, WHITE);
-    print("Version: 1.0.0", 16, 58, WHITE);
+    print("Version: 1.2.b", 16, 58, WHITE);
 
     print("GitHub:", 16, 88, WHITE);
     print("github.com/TaraVasque/TextIdle3ds", 16, 104, WHITE);
