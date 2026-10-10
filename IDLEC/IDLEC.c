@@ -1,5 +1,6 @@
 /*
- * IDLEC v1.6.c — AuroraOS C SDK idle game
+ * IDLEC — AuroraOS C SDK idle game
+ * App version is controlled by APP_VERSION below.
  *
  * Controls:
  *   Y            collect credits
@@ -14,10 +15,8 @@
 #include <string.h>
 #include <stdint.h>
 
-/* ------------------------------------------------------------------ */
-/* Constants                                                          */
-/* ------------------------------------------------------------------ */
 #define SAVE_MAGIC     0x52464F52u
+#define APP_VERSION    "1.7.c.b"
 #define SAVE_VERSION   3u
 #define MAX_COUNT      999999u
 #define ASC_LEVEL_CAP  100u
@@ -47,19 +46,16 @@
 
 enum { TAB_SHOP, TAB_UPGRADES, TAB_ASCEND, TAB_STATS, TAB_INFO };
 
-/* Indexes into SaveData.upgrades[] */
+
 enum {
     UPG_TAP, UPG_CRIT, UPG_PRODUCTION, UPG_OVERDRIVE,
     UPG_AUTO, UPG_LENS, UPG_CIRCUITS, UPG_REALITY
 };
-/* Indexes into SaveData.ascension_upgrades[] */
+
 enum {
     ASC_TOUCH, ASC_ENGINE, ASC_MAGNET, ASC_CRIT, ASC_CACHE, ASC_KNOWLEDGE
 };
 
-/* ------------------------------------------------------------------ */
-/* Save data (layout of v3 is unchanged, so existing saves still load) */
-/* ------------------------------------------------------------------ */
 typedef struct {
     uint32_t magic, version;
     uint64_t credits, lifetime, clicks, best;
@@ -92,9 +88,6 @@ typedef struct {
     uint32_t prestige;
 } LegacySaveData;
 
-/* ------------------------------------------------------------------ */
-/* Game data                                                          */
-/* ------------------------------------------------------------------ */
 static const char *const gen_names[GEN_COUNT] = {
     "DRONE", "WORKSHOP", "REACTOR", "SINGULARITY",
     "NANOFORGE", "DYSON ARRAY", "STAR EATER", "TIME ENGINE"
@@ -126,21 +119,15 @@ static const uint64_t asc_base[ASC_COUNT] = {1, 1, 2, 2, 3, 4};
 
 static const char *const tab_names[TAB_COUNT] = {"SHOP", "UPGRADES", "ASCEND", "STATS", "INFO"};
 
-/* ------------------------------------------------------------------ */
-/* State                                                              */
-/* ------------------------------------------------------------------ */
 static SaveData g;
 static char message[72] = "Press Y to collect credits.";
 static unsigned message_frames = MSG_FRAMES;
 static unsigned tab = TAB_SHOP, selected = 0;
 static unsigned tick = 0;
-static unsigned ascend_armed = 0;   /* frames left to confirm an ascension */
-static uint64_t cur_pps = 0;        /* cached production per second */
-static uint64_t cur_click = 1;      /* cached collect power */
+static unsigned ascend_armed = 0;
+static uint64_t cur_pps = 0;
+static uint64_t cur_click = 1;
 
-/* ------------------------------------------------------------------ */
-/* Small helpers                                                      */
-/* ------------------------------------------------------------------ */
 static void notify(const char *s) {
     snprintf(message, sizeof(message), "%s", s);
     message_frames = MSG_FRAMES;
@@ -154,6 +141,7 @@ static uint64_t sat_add(uint64_t a, uint64_t b) {
     return UINT64_MAX - a < b ? UINT64_MAX : a + b;
 }
 /* value * (pct/100) applied `levels` times, saturating. */
+/* Numbers go in, numbers get progressively more suspicious. */
 static uint64_t compound(uint64_t v, unsigned pct, unsigned levels) {
     for (unsigned i = 0; i < levels && v < UINT64_MAX; ++i) v = sat_mul(v, pct) / 100;
     return v;
@@ -184,9 +172,6 @@ static unsigned list_top(unsigned sel, unsigned count, unsigned rows) {
     return top > count - rows ? count - rows : top;
 }
 
-/* ------------------------------------------------------------------ */
-/* Economy                                                            */
-/* ------------------------------------------------------------------ */
 static uint64_t scaled_cost(uint64_t base, uint32_t level, unsigned pct) {
     uint64_t c = base;
     for (uint32_t i = 0; i < level; ++i) {
@@ -231,20 +216,19 @@ static uint64_t calc_production(void) {
     total = compound(total, 105, g.ascension_upgrades[ASC_KNOWLEDGE]);
     return total;
 }
+/* Recount the space nonsense before the screens start lying. */
 static void refresh_stats(void) {
     cur_pps = calc_production();
     cur_click = calc_click_power();
 }
 
+/* The money machine yearns for more money. */
 static void add_credits(uint64_t amount) {
     g.credits = sat_add(g.credits, amount);
     g.lifetime = sat_add(g.lifetime, amount);
     if (g.credits > g.best) g.best = g.credits;
 }
 
-/* ------------------------------------------------------------------ */
-/* Saving / loading                                                   */
-/* ------------------------------------------------------------------ */
 static void save_path(char *out, size_t n) { snprintf(out, n, "%s/save.dat", app_dir()); }
 
 static int save_game(int quiet) {
@@ -269,7 +253,7 @@ static void reset_game(void) {
     g.version = SAVE_VERSION;
     g.click_power = 1;
 }
-/* Clamp anything a corrupt or edited save could push out of range. */
+
 static void sanitize(void) {
     if (!g.click_power) g.click_power = 1;
     for (unsigned i = 0; i < GEN_COUNT; ++i) if (g.generators[i] > MAX_COUNT) g.generators[i] = MAX_COUNT;
@@ -321,9 +305,6 @@ static void load_game(void) {
     sanitize();
 }
 
-/* ------------------------------------------------------------------ */
-/* Actions                                                            */
-/* ------------------------------------------------------------------ */
 static unsigned crit_chance(void) {
     unsigned c = 5 + g.upgrades[UPG_CRIT] * 3 + g.ascension_upgrades[ASC_CRIT] * 2;
     return c > 80 ? 80 : c;
@@ -381,7 +362,7 @@ static void do_ascend(void) {
     save_game(1);
     notify("ASCENSION COMPLETE // permanent points awarded");
 }
-/* First press arms, second press within a few seconds confirms. */
+
 static void request_ascend(void) {
     if (g.lifetime < ASC_THRESHOLD) { notify("ASCENSION LOCKED // need 1,000,000 lifetime credits"); return; }
         if (!ascend_armed) {
@@ -392,13 +373,10 @@ static void request_ascend(void) {
         do_ascend();
 }
 
-/* ------------------------------------------------------------------ */
-/* Drawing                                                            */
-/* ------------------------------------------------------------------ */
 static void panel(int screen, int x, int y, int w, int h, int color) {
     gfx_round_rect(screen, x, y, w, h, 7, color);
 }
-/* Outlined panel used for the selected row. */
+
 static void outline(int screen, int x, int y, int w, int h, int color) {
     panel(screen, x, y, w, h, color);
     panel(screen, x + 3, y + 3, w - 6, h - 6, BG);
@@ -408,7 +386,7 @@ static void draw_top(void) {
     gfx_clear(SCREEN_TOP, BG);
     gfx_gradient(SCREEN_TOP, 0, 0, 400, 4, CYAN, BLUE);
     gfx_text(SCREEN_TOP, 16, 12, CYAN, "IDLEC");
-    gfx_text(SCREEN_TOP, 304, 14, MUTED, "v1.6.c");
+    gfx_text(SCREEN_TOP, 304, 14, MUTED, "v" APP_VERSION);
     gfx_print(SCREEN_TOP, 145, 13, FONT_SMALL, GOLD, "PLAYTIME %02llu:%02llu:%02llu",
               (unsigned long long)(g.play_seconds / 3600),
               (unsigned long long)((g.play_seconds / 60) % 60),
@@ -434,7 +412,7 @@ static void draw_top(void) {
     gfx_text(SCREEN_TOP, 86, 184, CYAN, "PRESS Y");
     gfx_print(SCREEN_TOP, 86, 198, FONT_SMALL, MUTED, "Crit chance: %u%%", crit_chance());
 
-    /* Progress toward the first ascension threshold */
+
     panel(SCREEN_TOP, 14, 230, 372, 7, PANEL);
     unsigned pct = g.lifetime >= ASC_THRESHOLD ? 100 : (unsigned)(g.lifetime / (ASC_THRESHOLD / 100));
     if (pct) gfx_round_rect(SCREEN_TOP, 14, 230, (372 * (int)pct) / 100, 7, 3, GOLD);
@@ -535,14 +513,13 @@ static void draw_stats(void) {
 
 static void draw_info(void) {
     gfx_text(SCREEN_BOTTOM, 12, 51, CYAN, "ABOUT THIS GAME");
-    gfx_text(SCREEN_BOTTOM, 12, 72, WHITE, "IDLEC v1.6.c");
+    gfx_text(SCREEN_BOTTOM, 12, 72, WHITE, "IDLEC v" APP_VERSION);
     gfx_text(SCREEN_BOTTOM, 12, 90, MUTED, "Developer / Discord:");
     gfx_text(SCREEN_BOTTOM, 12, 105, WHITE, "taravask.");
     gfx_text(SCREEN_BOTTOM, 12, 126, MUTED, "Source repository:");
     gfx_text(SCREEN_BOTTOM, 12, 142, CYAN, "github.com/TaraVasque/");
     gfx_text(SCREEN_BOTTOM, 12, 156, CYAN, "TextIdle3ds");
     gfx_text(SCREEN_BOTTOM, 12, 184, MUTED, "AuroraOS edition");
-    gfx_text(SCREEN_BOTTOM, 8, 219, MUTED, "A SAVE  Y COLLECT");
 }
 
 static void draw_bottom(void) {
@@ -565,9 +542,6 @@ static void draw_bottom(void) {
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* Input                                                              */
-/* ------------------------------------------------------------------ */
 static unsigned item_count(void) {
     switch (tab) {
         case TAB_SHOP:     return GEN_COUNT;
@@ -619,37 +593,42 @@ static void handle_touch(void) {
     }
 }
 
+/* Ask the tiny buttons what kind of chaos they want today. */
 static void handle_keys(void) {
     uint32_t keys = hid_keys_down();
     if (keys & KEY_Y) collect();
     if (keys & KEY_A) activate();
-    if (keys & (KEY_X | KEY_B | KEY_L)) save_game(0);
+    if (keys & (KEY_X | KEY_B )) save_game(0);
 
-    if (keys & KEY_LEFT)  set_tab(tab + TAB_COUNT - 1);
-    if (keys & (KEY_RIGHT | KEY_R)) set_tab(tab + 1);
-
+    /* Bumpers first. Two directions at once is how the tabs enter orbit. */
+    if (keys & KEY_R) {
+        set_tab(tab + 1);
+    } else if (keys & KEY_L) {
+        set_tab(tab + TAB_COUNT - 1);
+    } else if (keys & KEY_RIGHT) {
+        set_tab(tab + 1);
+    } else if (keys & KEY_LEFT) {
+        set_tab(tab + TAB_COUNT - 1);
+    }
     if ((keys & KEY_UP) && selected > 0) { selected--; ascend_armed = 0; }
     if ((keys & KEY_DOWN) && selected + 1 < item_count()) { selected++; ascend_armed = 0; }
 }
 
-/* ------------------------------------------------------------------ */
-/* Main loop                                                          */
-/* ------------------------------------------------------------------ */
 static void update(void) {
     handle_keys();
     handle_touch();
     refresh_stats();
 
-    /* Timers that count frames */
+
     if (message_frames) message_frames--;
     if (ascend_armed && --ascend_armed == 0) notify("ASCENSION CANCELLED");
 
-    /* Once per second (60 frames) */
+
     if (++tick >= 60) {
         tick = 0;
         g.play_seconds++;
         add_credits(cur_pps);
-        if (g.play_seconds % AUTOSAVE_SECS == 0) save_game(1);   /* silent autosave */
+        if (g.play_seconds % AUTOSAVE_SECS == 0) save_game(1);
     }
 }
 
