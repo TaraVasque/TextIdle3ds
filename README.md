@@ -1,64 +1,75 @@
-# Text Idle
+# IDLEC
 
-A small text-based idle/clicker game made for **AuroraOS** using the **Auric** programming language.
+**v1.5.c **
 
-The goal is simple: generate as many coins as possible, upgrade your production, build increasingly powerful generators, and keep the numbers going up.
+An idle game built in C. Collect credits, build up your production, install upgrades, and ascend to keep permanent bonuses for the next run.
 
-## About
+## FEATURES
 
-`Text Idle` is designed around a retro terminal/text aesthetic rather than a traditional graphical idle game.
-(because it was easier)
-The entire interface and text is drawn.
-(ww2 face after seeing this^)
+- **8 GENERATORS** — DRONE, WORKSHOP, REACTOR, SINGULARITY, NANOFORGE, DYSON ARRAY, STAR EATER, and TIME ENGINE.
+- **8 UPGRADES** — boost tapping, critical harvests, and passive production.
+- **ASCENSION SYSTEM** — reset your current run to earn Ascension Points (AP).
+- **PERMANENT UPGRADES** — spend AP on bonuses that stay with you between runs.
+- **STATS PAGE** — check lifetime earnings, total collects, best credits, ascensions, AP, production, and generators owned.
+- **PLAYTIME TRACKER** — total time played is shown on the top screen and stored in your save.
+- **INFO PAGE** — developer / Discord name and source repository.
+- **SAVE SYSTEM** — progress is saved in the app data directory.
 
-* Designed for AuroraOS on Nintendo 3DS
+## CONTROLS
 
+| INPUT | ACTION |
+| --- | --- |
+| `Y` | Collect credits |
+| Touch the core | Collect credits |
+| `A` | Interact with the selected item: buy, install, or ascend |
+| D-pad / Circle Pad | Navigate tabs and items |
+| `Left` / `Right` | Switch tabs |
+| `Up` / `Down` | Select an item |
+| `X` | Save now |
+| `B` / `L` | Save |
+| `R` | Switch to the next tab |
+| `HOME` | Return to AuroraOS |
 
-Every 10th click can trigger a critical click once the critical upgrade has been purchased.
+## HOW TO PLAY
 
-Combos reward continued clicking without letting the combo timer expire.
+1. Press `Y` or tap the core to collect credits.
+2. Buy generators in **SHOP** to earn credits automatically.
+3. Install items in **UPGRADES** to improve your collection power and production.
+4. Earn at least **1,000,000 lifetime credits** to unlock Ascension.
+5. Ascend to reset your current run and earn AP.
+6. Spend AP in **ASCEND** on permanent upgrades.
+7. Check **STATS** to track your progress and playtime.
 
+**Heads up:** Ascending resets your current credits, generators, and regular upgrades. Your Ascension Points and permanent upgrades remain.
 
+## BUILD
 
-## Save System
+Build with the AuroraOS C SDK compiler:
 
-`Text Idle` uses a hellish save system.
-
-A save code contains the important permanent game data, including:
-
-* Current coins
-* Bytes
-* Workers
-* Factories
-* Cores
-* Click power
-* Critical upgrade
-* Total clicks
-* Critical clicks
-* Best combo
-* Lifetime coins
-* Highest coins
-* Generator click upgrades
-* Production upgrade
-
-Example:
-
-```text
-C888Cur222W15F3Co7P12Click1Crit2Cnt1456CC37Comb42Lif92834Hi45000CU3WU1FU0CoU0PU1
+```sh
+python3 sdk/aurcc.py build main.c -o IDLEC.bin
 ```
 
-Save codes do not use dash separators.
+Run the command from the project directory and make sure the AuroraOS SDK is installed where expected. The source includes `aurora_app.h`, so the SDK headers and libraries must be available to the compiler.
 
-### Loading
+## SAVE DATA
 
-Each value is entered individually and the game moves to the next section when `NEXT` is selected.
+The game stores its save as `save.dat` in the application's data directory. The save contains credits, generators, upgrades, ascension progress, and playtime. Older supported save formats are migrated when loaded.
 
-The top screen shows the progress of the save-code entry so it is readable and easy to see which sections have already been completed.
+## PROJECT
 
-Invalid values are rejected before the game accepts the save.
+- **Name:** IDLEC
+- **Version:** v1.5.c
+- **Developer / Discord:** `taravask.`
+- **Repository:** https://github.com/TaraVasque/TextIdle3ds
 
-please exuse the crude format and way ive made the game images i couldnt figure out how to get a screen shot of the game, using auroras l1+r1 ss combo didnt work in my game so i resorted to taking physical pictures and putting them in the gameimages folder
+---
+
+`IDLEC // COLLECT. BUILD. ASCEND. REPEAT.`
 
 
 
 
+
+
+*i used shatgpt to fix my misspelling and punctuation
