@@ -42,15 +42,7 @@ An idle game built in C. Collect credits, build up your production, install upgr
 
 **Heads up:** Ascending resets your current credits, generators, and regular upgrades. Your Ascension Points and permanent upgrades remain.
 
-## BUILD
 
-Build with the AuroraOS C SDK compiler:
-
-```sh
-python3 sdk/aurcc.py build main.c -o IDLEC.bin
-```
-
-Run the command from the project directory and make sure the AuroraOS SDK is installed where expected. The source includes `aurora_app.h`, so the SDK headers and libraries must be available to the compiler.
 
 ## SAVE DATA
 
