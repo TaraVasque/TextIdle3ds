@@ -51,8 +51,6 @@ Save codes do not use dash separators.
 
 ### Loading
 
-Loading a save uses a cut up ui.
-
 Each value is entered individually and the game moves to the next section when `NEXT` is selected.
 
 The top screen shows the progress of the save-code entry so it is readable and easy to see which sections have already been completed.
