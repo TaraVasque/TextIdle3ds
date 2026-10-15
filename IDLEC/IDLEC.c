@@ -5,6 +5,7 @@
  *   Y            collect credits
  *   D-pad        UP/DOWN select item, LEFT/RIGHT (or L/R) change tab
  *   A            buy / install / ascend (ascend asks for confirmation)
+ *                Each ascension raises the lifetime credits the next one needs (x1.5)
  *   X, B         save now
  * Save data: <app dir>/save.dat (v1, v2, v3 and v4 saves are all loaded)
  */
@@ -15,11 +16,13 @@
 #include <stdint.h>
 
 #define SAVE_MAGIC     0x52464F52u
-#define APP_VERSION    "1.8.c.b"
+#define APP_VERSION    "1.9"
 #define SAVE_VERSION   4u
 #define MAX_COUNT      999999u
 #define ASC_LEVEL_CAP  100u
-#define ASC_THRESHOLD  1000000ULL
+#define ASC_THRESHOLD  1000000ULL           /* lifetime credits needed for the FIRST ascension */
+#define ASC_GROWTH_PCT 150u                 /* every ascension makes the next one cost 150% as much */
+#define ASC_THRESHOLD_MAX 1000000000000000000ULL
 #define AUTOSAVE_SECS  30u
 #define MSG_FRAMES     150u
 #define CONFIRM_FRAMES 180u
@@ -298,6 +301,12 @@ static uint64_t asc_cost(unsigned i) {
     if (level >= ASC_LEVEL_CAP) return UINT64_MAX;
     return asc_base[i] + (uint64_t)level * (asc_base[i] + 1);
 }
+/* Lifetime credits needed to ascend right now: grows x1.5 with every ascension. */
+static uint64_t asc_threshold(void) {
+    uint64_t t = ASC_THRESHOLD;
+    for (uint32_t i = 0; i < g.ascensions && t < ASC_THRESHOLD_MAX; ++i) t = sat_mul(t, ASC_GROWTH_PCT) / 100;
+    return t < ASC_THRESHOLD_MAX ? t : ASC_THRESHOLD_MAX;
+}
 static uint64_t ascend_gain(void) {
     uint64_t pts = sat_mul(g.lifetime / ASC_THRESHOLD, 100 + g.ascension_upgrades[ASC_MAGNET] * 10) / 100;
     return pts ? pts : 1;
@@ -491,13 +500,19 @@ static void do_ascend(void) {
 }
 
 static void request_ascend(void) {
-    if (g.lifetime < ASC_THRESHOLD) { notify("ASCENSION LOCKED // need 1,000,000 lifetime credits"); return; }
-        if (!ascend_armed) {
-            ascend_armed = CONFIRM_FRAMES;
-            notify("PRESS AGAIN TO CONFIRM // this resets your run");
-            return;
-        }
-        do_ascend();
+    uint64_t need = asc_threshold();
+    if (g.lifetime < need) {
+        char buf[72];
+        snprintf(buf, sizeof(buf), "ASCENSION LOCKED // need %s lifetime credits", fmt(need));
+        notify(buf);
+        return;
+    }
+    if (!ascend_armed) {
+        ascend_armed = CONFIRM_FRAMES;
+        notify("PRESS AGAIN TO CONFIRM // this resets your run");
+        return;
+    }
+    do_ascend();
 }
 
 static void panel(int screen, int x, int y, int w, int h, int color) {
@@ -541,7 +556,8 @@ static void draw_top(void) {
 
 
     panel(SCREEN_TOP, 14, 230, 372, 7, PANEL);
-    unsigned pct = g.lifetime >= ASC_THRESHOLD ? 100 : (unsigned)(g.lifetime / (ASC_THRESHOLD / 100));
+    uint64_t need = asc_threshold();
+    unsigned pct = g.lifetime >= need ? 100 : (unsigned)(g.lifetime / (need / 100));
     if (pct) gfx_round_rect(SCREEN_TOP, 14, 230, (372 * (int)pct) / 100, 7, 3, GOLD);
 }
 
@@ -614,14 +630,15 @@ static void asc_effect(unsigned i, unsigned lv, char *out, size_t n) {
 #define ASC_ROWS    3
 
 static void draw_ascend(void) {
-    int ready = g.lifetime >= ASC_THRESHOLD;
+    uint64_t need = asc_threshold();
+    int ready = g.lifetime >= need;
 
     /* Summary + progress toward the next ascension */
     panel(SCREEN_BOTTOM, 8, 50, 304, 22, PANEL2);
     gfx_print(SCREEN_BOTTOM, 15, 54, FONT_SMALL, GOLD, "AP: %s", fmt(g.ascension_points));
     gfx_print(SCREEN_BOTTOM, 150, 54, FONT_SMALL, WHITE, "Ascensions: %u", g.ascensions);
     panel(SCREEN_BOTTOM, 15, 65, 290, 4, BG);
-    unsigned pct = ready ? 100 : (unsigned)(g.lifetime / (ASC_THRESHOLD / 100));
+    unsigned pct = ready ? 100 : (unsigned)(g.lifetime / (need / 100));
     if (pct) gfx_round_rect(SCREEN_BOTTOM, 15, 65, (290 * (int)pct) / 100, 4, 2, ready ? GREEN : CYAN);
 
     /* Ascend button */
@@ -632,7 +649,7 @@ static void draw_ascend(void) {
              : (selected == 0 ? ">> ASCEND & RESET RUN <<" : "ASCEND & RESET RUN"));
     if (ready) gfx_print(SCREEN_BOTTOM, 18, ASC_BTN_Y + 16, FONT_SMALL, GREEN, "Ready: gain +%s AP", fmt(ascend_gain()));
     else gfx_print(SCREEN_BOTTOM, 18, ASC_BTN_Y + 16, FONT_SMALL, MUTED, "Need %s lifetime credits (%s)",
-        fmt(ASC_THRESHOLD), fmt(g.lifetime));
+        fmt(need), fmt(g.lifetime));
 
     /* Permanent upgrade list */
     gfx_text(SCREEN_BOTTOM, 12, 106, CYAN, "PERMANENT UPGRADES");
@@ -684,6 +701,7 @@ static void draw_stats(void) {
     gfx_print(SCREEN_BOTTOM, 12, 148, FONT_REGULAR, WHITE, "Production/sec: %s", fmt(cur_pps));
     gfx_print(SCREEN_BOTTOM, 12, 164, FONT_REGULAR, WHITE, "Generators owned: %u", total_generators());
     gfx_print(SCREEN_BOTTOM, 12, 180, FONT_REGULAR, WHITE, "Goals: %u/%u", ach_count(), (unsigned)ACH_COUNT);
+    gfx_print(SCREEN_BOTTOM, 12, 196, FONT_REGULAR, GOLD, "Next ascension: %s", fmt(asc_threshold()));
     gfx_text(SCREEN_BOTTOM, 8, 219, MUTED, "A SAVE NOW  Y COLLECT");
 }
 
